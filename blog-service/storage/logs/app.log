@@ -1,0 +1,3 @@
+2021/12/19 21:08:48 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"eddycjy: go-programming-tour-book/blog-service","time":1639919328252894000}
+2021/12/19 21:09:24 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 25 main.init.0"],"level":"info","message":"eddycjy: go-programming-tour-book/blog-service","time":1639919364314163000}
+2021/12/19 21:33:44 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"Captain: go-programming-tour-book/blog-service","time":1639920824032932000}
