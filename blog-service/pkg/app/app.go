@@ -32,7 +32,7 @@ func (r *Response) ToResponseList(list interface{}, totalRows int) {
 		"list": list,
 		"pager": Pager{
 			Page:      GetPage(r.Ctx),
-			PageSize:  GetpageSize(r.Ctx),
+			PageSize:  GetPageSize(r.Ctx),
 			TotalRows: totalRows,
 		},
 	})

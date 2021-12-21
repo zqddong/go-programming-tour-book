@@ -20,10 +20,10 @@ func init() {
 		log.Fatalf("init.setupSetting err: %v", err)
 	}
 
-	//err = setupDBEngin()
-	//if err != nil {
-	//	log.Fatalf("init.setupDBEngin err: %v", err)
-	//}
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init.setupDBEngine err: %v", err)
+	}
 
 	err = setupLogger()
 	if err != nil {
@@ -32,19 +32,19 @@ func init() {
 }
 
 func setupSetting() error {
-	setting, err := setting.NewSetting()
+	s, err := setting.NewSetting()
 	if err != nil {
 		return err
 	}
-	err = setting.ReadSection("Server", &global.ServerSetting)
+	err = s.ReadSection("Server", &global.ServerSetting)
 	if err != nil {
 		return err
 	}
-	err = setting.ReadSection("App", &global.AppSetting)
+	err = s.ReadSection("App", &global.AppSetting)
 	if err != nil {
 		return err
 	}
-	err = setting.ReadSection("Database", &global.DatabaseSetting)
+	err = s.ReadSection("Database", &global.DatabaseSetting)
 	if err != nil {
 		return err
 	}
@@ -53,12 +53,13 @@ func setupSetting() error {
 	return nil
 }
 
-func setupDBEngin() error {
+func setupDBEngine() error {
 	var err error
-	global.DBEngin, err = model.NewDBEngin(global.DatabaseSetting)
+	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -74,6 +75,10 @@ func setupLogger() error {
 	return nil
 }
 
+// @title 博客系统
+// @version 1.0
+// @description Go Blog
+// @termsOfService ...
 func main() {
 	// r := gin.Default()
 	// r.GET("/ping", func(c *gin.Context) {

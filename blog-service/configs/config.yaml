@@ -10,13 +10,13 @@ App:
   LogFileName: app
   LogFileExt: .log
 Database:
-  BDType: mysql
-  Username: dev
-  Password: sail
+  DBType: mysql
+  UserName: sail
+  Password: password
   Host: 127.0.0.1:3306
-  DBName: blog_service
+  DBName: dev
   TablePrefix: blog_
-  Chatset: utf8
-  ParesTime: True
+  Charset: utf8
+  ParseTime: True
   MaxIdleConns: 10
   MaxOpenConns: 30
