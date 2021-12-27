@@ -17,6 +17,8 @@ func NewRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	r.Use(middleware.AccessLog()) // 自定义日志
+	//r.Use(middleware.Recovery()) // 自定义异常捕获并发送邮件
 	r.Use(middleware.Translations())
 	//url :=  ginSwagger.URL("http://127.0.0.1:8000/swagger/doc.json")
 	//r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))

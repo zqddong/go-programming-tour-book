@@ -31,3 +31,12 @@ JWT:
   Secret: Captain
   Issuer: blog-service
   Expire: 7200
+Email:
+  Host: smtp.qq.com
+  Port: 465
+  UserName: 676496871
+  Password: bfzhmdvxmqvabejf
+  IsSSL: true
+  From: 676496871@qq.com
+  TO:
+    3044927129@qq.com
