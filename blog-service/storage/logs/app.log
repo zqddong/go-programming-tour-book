@@ -1,0 +1,7 @@
+2021/12/27 21:12:38 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"Captain: go-programming-tour-book/blog-service","time":1640610758737292000}
+2021/12/27 21:16:50 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"Captain: go-programming-tour-book/blog-service","time":1640611010376911000}
+2021/12/27 21:19:06 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"Captain: go-programming-tour-book/blog-service","time":1640611146584504000}
+2021/12/27 21:24:23 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"Captain: go-programming-tour-book/blog-service","time":1640611463380875000}
+2021/12/27 21:31:12 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"Captain: go-programming-tour-book/blog-service","time":1640611872710750000}
+2021/12/27 21:56:10 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"Captain: go-programming-tour-book/blog-service","time":1640613370620866000}
+2021/12/27 21:57:29 {"callers":["/Users/dongzhenqi/Code/Go/go-programming-tour-book/blog-service/main.go: 28 main.init.0"],"level":"info","message":"Captain: go-programming-tour-book/blog-service","time":1640613449606288000}
