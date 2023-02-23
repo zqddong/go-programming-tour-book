@@ -1,9 +1,8 @@
 package upload
 
 import (
-	"blog-service/global"
-	"blog-service/pkg/util"
-
+	"github.com/zqddong/go-programming-tour-book/blog-service/global"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/util"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -32,13 +31,8 @@ func GetSavePath() string {
 	return global.AppSetting.UploadSavePath
 }
 
-func GetServerUrl() string {
-	return global.AppSetting.UploadServerUrl
-}
-
 func CheckSavePath(dst string) bool {
 	_, err := os.Stat(dst)
-
 	return os.IsNotExist(err)
 }
 
@@ -52,9 +46,7 @@ func CheckContainExt(t FileType, name string) bool {
 				return true
 			}
 		}
-
 	}
-
 	return false
 }
 
@@ -67,13 +59,11 @@ func CheckMaxSize(t FileType, f multipart.File) bool {
 			return true
 		}
 	}
-
 	return false
 }
 
 func CheckPermission(dst string) bool {
 	_, err := os.Stat(dst)
-
 	return os.IsPermission(err)
 }
 
@@ -82,7 +72,6 @@ func CreateSavePath(dst string, perm os.FileMode) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 

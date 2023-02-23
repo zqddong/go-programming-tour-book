@@ -1,73 +1,66 @@
 package routers
 
 import (
-	_ "blog-service/docs"
-	"blog-service/global"
-	"blog-service/internal/middleware"
-	"blog-service/internal/routers/api"
-	v1 "blog-service/internal/routers/api/v1"
-	"blog-service/pkg/limiter"
+	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
+	swaggerFiles "github.com/swaggo/gin-swagger/swaggerFiles"
+	_ "github.com/zqddong/go-programming-tour-book/blog-service/docs"
+	"github.com/zqddong/go-programming-tour-book/blog-service/global"
+	"github.com/zqddong/go-programming-tour-book/blog-service/internal/middleware"
+	"github.com/zqddong/go-programming-tour-book/blog-service/internal/routers/api"
+	"github.com/zqddong/go-programming-tour-book/blog-service/internal/routers/api/v1"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/limiter"
 	"net/http"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
-var methodLimiters = limiter.NewMethodLimiter().AddBuckets(
-	limiter.LimiterBucketRule{
-		Key:          "/auth",
-		FillInterval: time.Second,
-		Capacity:     10,
-		Quantum:      10,
-	},
-)
+var methodLimiters = limiter.NewMethodLimiter().AddBuckets(limiter.LimiterBucketRule{
+	Key:          "/auth",
+	FillInterval: time.Second,
+	Capacity:     10,
+	Quantum:      10,
+})
 
 func NewRouter() *gin.Engine {
 	r := gin.New()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
-	r.Use(middleware.AccessLog()) // 自定义日志
-	//r.Use(middleware.Recovery()) // 自定义异常捕获并发送邮件
+	if global.ServerSetting.RunMode == "debug" {
+		r.Use(gin.Logger())
+		r.Use(gin.Recovery())
+	} else {
+		r.Use(middleware.AccessLog())
+		r.Use(middleware.Recovery())
+	}
+	r.Use(middleware.Tracing())
+	r.Use(middleware.RateLimter(methodLimiters))
+	r.Use(middleware.ContextTimeout(60 * time.Second))
+	//r.Use(middleware.ContextTimeout(global.AppSetting.DefaultContextTimeout))
 	r.Use(middleware.Translations())
-	//url :=  ginSwagger.URL("http://127.0.0.1:8000/swagger/doc.json")
-	//r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	r.Use(middleware.RateLimiter(methodLimiters))
-	r.POST("/auth", api.GetAuth)
+	tag := v1.NewTag()
+	article := v1.NewArticle()
 
 	upload := api.NewUpload()
 	r.POST("/upload/file", upload.UploadFile)
 	r.StaticFS("/static", http.Dir(global.AppSetting.UploadSavePath))
 
-	apiv1 := r.Group("/api/v1")
-	apiv1.Use(middleware.JWT())
+	r.POST("/auth", api.GetAuth)
+
+	apiV1 := r.Group("/api/v1")
+	apiV1.Use(middleware.JWT())
 	{
-		article := v1.NewArticle()
-		tag := v1.NewTag()
+		apiV1.POST("/tags", tag.Create)
+		apiV1.DELETE("/tags/:id", tag.Delete)
+		apiV1.PUT("/tags/:id", tag.Update)
+		apiV1.PATCH("/tags/:id/state", tag.Update)
+		apiV1.GET("/tags", tag.List)
 
-		// 创建标签
-		apiv1.POST("/tags", tag.Create)
-		// 删除指定标签
-		apiv1.DELETE("/tags/:id", tag.Delete)
-		// 更新指定标签
-		apiv1.PUT("/tags/:id", tag.Update)
-		// 获取标签列表
-		apiv1.GET("/tags", tag.List)
-
-		// 创建文章
-		apiv1.POST("/articles", article.Create)
-		// 删除指定文章
-		apiv1.DELETE("/articles/:id", article.Delete)
-		// 更新指定文章
-		apiv1.PUT("/articles/:id", article.Update)
-		// 获取指定文章
-		apiv1.GET("/articles/:id", article.Get)
-		// 获取文章列表
-		apiv1.GET("/articles", article.List)
+		apiV1.POST("/articles", article.Create)
+		apiV1.DELETE("/articles/:id", article.Delete)
+		apiV1.PUT("/articles/:id", article.Update)
+		apiV1.PATCH("/articles/:id/state", article.Update)
+		apiV1.GET("/articles/:id", article.Get)
+		apiV1.GET("/articles", article.List)
 	}
-
 	return r
 }

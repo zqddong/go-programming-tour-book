@@ -1,12 +1,12 @@
 package middleware
 
 import (
-	"blog-service/global"
-	"blog-service/pkg/app"
-	"blog-service/pkg/email"
-	"blog-service/pkg/errcode"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/zqddong/go-programming-tour-book/blog-service/global"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/app"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/email"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/errcode"
 	"time"
 )
 
@@ -22,16 +22,15 @@ func Recovery() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				s := "panic recover err: %v"
-				global.Logger.WithCallersFrames().Errorf(c.Request.Context(), s, err)
+				global.Logger.WithCallersFrames().Errorf(c, "panic recover err: %v", err)
 
-				err := defaultMailer.SendEmail(
+				err := defaultMailer.SendMail(
 					global.EmailSetting.To,
-					fmt.Sprintf("异常抛出，发生时间： %d", time.Now().Unix()),
-					fmt.Sprintf("错误信息： %v", err),
+					fmt.Sprintf("异常抛出，发生时间: %d", time.Now().Unix()),
+					fmt.Sprintf("错误信息: %v", err),
 				)
 				if err != nil {
-					global.Logger.Panicf(c.Request.Context(), "mail.SendMail err: %v", err)
+					global.Logger.Errorf(c, "mail.SendMail err: %v", err)
 				}
 
 				app.NewResponse(c).ToErrorResponse(errcode.ServerError)

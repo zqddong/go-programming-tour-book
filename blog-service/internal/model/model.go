@@ -1,18 +1,13 @@
 package model
 
 import (
-	"blog-service/global"
-	"blog-service/pkg/setting"
 	"fmt"
 	otgorm "github.com/eddycjy/opentracing-gorm"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/zqddong/go-programming-tour-book/blog-service/global"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/setting"
 	"time"
-)
-
-const (
-	STATE_OPEN  = 1
-	STATE_CLOSE = 0
 )
 
 type Model struct {
@@ -27,16 +22,6 @@ type Model struct {
 
 func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
 	s := "%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=Local"
-	//aa := fmt.Sprintf(s,
-	//	databaseSetting.UserName,
-	//	databaseSetting.Password,
-	//	databaseSetting.Host,
-	//	databaseSetting.DBName,
-	//	databaseSetting.Charset,
-	//	databaseSetting.ParseTime,
-	//)
-
-	//log.Fatalf("init.setupDBEngine err: %v", aa)
 
 	db, err := gorm.Open(databaseSetting.DBType, fmt.Sprintf(s,
 		databaseSetting.UserName,
@@ -62,16 +47,19 @@ func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
 	otgorm.AddGormCallbacks(db)
 	return db, nil
 }
+
 func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		nowTime := time.Now().Unix()
 		if createTimeField, ok := scope.FieldByName("CreatedOn"); ok {
-			_ = createTimeField.Set(nowTime)
+			if createTimeField.IsBlank {
+				_ = createTimeField.Set(nowTime)
+			}
 		}
 
-		if modifyTimeFiled, ok := scope.FieldByName("ModifiedOn"); ok {
-			if modifyTimeFiled.IsBlank {
-				_ = modifyTimeFiled.Set(nowTime)
+		if modifyTimeField, ok := scope.FieldByName("ModifiedOn"); ok {
+			if modifyTimeField.IsBlank {
+				_ = modifyTimeField.Set(nowTime)
 			}
 		}
 	}
@@ -112,7 +100,6 @@ func deleteCallback(scope *gorm.Scope) {
 				addExtraSpaceIfExist(extraOption),
 			)).Exec()
 		}
-
 	}
 }
 

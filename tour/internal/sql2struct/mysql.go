@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"log"
 )
 
 type DBModel struct {
@@ -62,7 +64,7 @@ func NewDBModel(info *DBInfo) *DBModel {
 
 func (m *DBModel) Connect() error {
 	var err error
-	s := "%s:%s@tcp(%s)/information_schema?" + "charset=%s&paresTime=True&loc=Local"
+	s := "%s:%s@tcp(%s)/information_schema?charset=%s&parseTime=True&loc=Local"
 	dsn := fmt.Sprintf(
 		s,
 		m.DBInfo.UserName,
@@ -79,14 +81,16 @@ func (m *DBModel) Connect() error {
 }
 
 func (m *DBModel) GetColumns(dbName, tableName string) ([]*TableColumn, error) {
-	query := "SELECT COLUMN_NAME,DATA_TYPE,COLUMN_KEY,IS_NULLABLE,COLUMN_TYPE" +
-		"COLUMN_COMMENT FROM COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?"
+	query := "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_TYPE, COLUMN_COMMENT " +
+		"FROM COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?;"
+	log.Println("-----------:" + dbName)
+	log.Println("-----------:" + tableName)
 	rows, err := m.DBEngine.Query(query, dbName, tableName)
 	if err != nil {
 		return nil, err
 	}
 
-	if rows != nil {
+	if rows == nil {
 		return nil, errors.New("没有数据")
 	}
 	defer rows.Close()
@@ -94,7 +98,7 @@ func (m *DBModel) GetColumns(dbName, tableName string) ([]*TableColumn, error) {
 	var columns []*TableColumn
 	for rows.Next() {
 		var column TableColumn
-		err := rows.Scan(&column.ColumnName, column.DataType, &column.ColumnKey, &column.IsNullable,
+		err := rows.Scan(&column.ColumnName, &column.DataType, &column.ColumnKey, &column.IsNullable,
 			&column.ColumnType, &column.ColumnComment)
 		if err != nil {
 			return nil, err

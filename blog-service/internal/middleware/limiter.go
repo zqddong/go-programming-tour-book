@@ -1,13 +1,13 @@
 package middleware
 
 import (
-	"blog-service/pkg/app"
-	"blog-service/pkg/errcode"
-	"blog-service/pkg/limiter"
 	"github.com/gin-gonic/gin"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/app"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/errcode"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/limiter"
 )
 
-func RateLimiter(l limiter.LimiterIface) gin.HandlerFunc {
+func RateLimter(l limiter.LimiterIface) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		key := l.Key(c)
 		if bucket, ok := l.GetBucket(key); ok {

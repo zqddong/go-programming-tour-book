@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package helloworld;
+
+service Greeter {
+  // SayHello Unary RPC：一元 RPC
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+
+  // SayList Server-side streaming RPC：服务端流式 RPC
+  rpc SayList (HelloRequest) returns (stream HelloReply) {};
+
+  // SayRecord Client-side streaming RPC：客户端流式 RPC
+  rpc SayRecord(stream HelloRequest) returns (HelloReply) {};
+
+  // SayRoute Bidirectional streaming RPC：双向流式 RPC
+  rpc SayRoute(stream HelloRequest) returns (stream HelloReply) {};
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}

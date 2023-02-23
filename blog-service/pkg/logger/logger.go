@@ -4,12 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"runtime"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 type Level int8
@@ -131,7 +130,6 @@ func (l *Logger) JSONFormat(level Level, message string) map[string]interface{} 
 			}
 		}
 	}
-
 	return data
 }
 
@@ -200,4 +198,8 @@ func (l *Logger) Panic(ctx context.Context, v ...interface{}) {
 
 func (l *Logger) Panicf(ctx context.Context, format string, v ...interface{}) {
 	l.WithContext(ctx).WithTrace().Output(LevelPanic, fmt.Sprintf(format, v...))
+}
+
+func (l *Logger) WithCallerFrames() {
+
 }

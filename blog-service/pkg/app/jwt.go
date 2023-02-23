@@ -1,9 +1,9 @@
 package app
 
 import (
-	"blog-service/global"
-	"blog-service/pkg/util"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/zqddong/go-programming-tour-book/blog-service/global"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/util"
 	"time"
 )
 
@@ -35,18 +35,17 @@ func GenerateToken(appKey, appSecret string) (string, error) {
 }
 
 func ParseToken(token string) (*Claims, error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return GetJWTSecret(), nil
-	})
+	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{},
+		func(token *jwt.Token) (interface{}, error) {
+			return GetJWTSecret(), nil
+		})
 	if err != nil {
 		return nil, err
 	}
 	if tokenClaims != nil {
-		claims, ok := tokenClaims.Claims.(*Claims)
-		if ok && tokenClaims.Valid {
+		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
 			return claims, nil
 		}
 	}
-
 	return nil, err
 }

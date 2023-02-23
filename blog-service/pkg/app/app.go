@@ -1,8 +1,8 @@
 package app
 
 import (
-	"blog-service/pkg/errcode"
 	"github.com/gin-gonic/gin"
+	"github.com/zqddong/go-programming-tour-book/blog-service/pkg/errcode"
 	"net/http"
 )
 
@@ -12,8 +12,8 @@ type Response struct {
 
 type Pager struct {
 	Page      int `json:"page"`
-	PageSize  int `json:"pageSize"`
-	TotalRows int `json:"totalRows"`
+	PageSize  int `json:"page_size"`
+	TotalRows int `json:"total_rows"`
 }
 
 func NewResponse(ctx *gin.Context) *Response {

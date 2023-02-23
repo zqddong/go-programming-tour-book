@@ -1,0 +1,38 @@
+package server
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/zqddong/go-programming-tour-book/chatroom/gloable"
+	"github.com/zqddong/go-programming-tour-book/chatroom/logic"
+	"net/http"
+	"text/template"
+)
+
+func HomeHandleFunc(w http.ResponseWriter, req *http.Request) {
+	tpl, err := template.ParseFiles(gloable.RootDir + "/template/home.html")
+	if err != nil {
+		fmt.Fprint(w, "模板解析错误！")
+		return
+	}
+
+	err = tpl.Execute(w, nil)
+	if err != nil {
+		fmt.Fprint(w, "模板执行错误！")
+		return
+	}
+}
+
+func UserListHandleFunc(w http.ResponseWriter, req *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	userList := logic.Broadcaster.GetUserList()
+	b, err := json.Marshal(userList)
+
+	if err != nil {
+		fmt.Fprint(w, `[]`)
+	} else {
+		fmt.Fprint(w, string(b))
+	}
+}

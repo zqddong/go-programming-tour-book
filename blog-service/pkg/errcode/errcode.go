@@ -24,13 +24,12 @@ func NewError(code int, msg string) *Error {
 func (e *Error) Code() int {
 	return e.code
 }
-
 func (e *Error) Msg() string {
 	return e.msg
 }
 
 func (e *Error) Msgf(args []interface{}) string {
-	return fmt.Sprintf(e.msg, args)
+	return fmt.Sprintf(e.msg, args...)
 }
 
 func (e *Error) Details() []string {

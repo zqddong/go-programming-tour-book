@@ -11,18 +11,18 @@ type MethodLimiter struct {
 }
 
 func NewMethodLimiter() LimiterIface {
-	l := &Limiter{limiterBuckets: make(map[string]*ratelimit.Bucket)}
 	return MethodLimiter{
-		Limiter: l,
+		Limiter: &Limiter{limiterBuckets: make(map[string]*ratelimit.Bucket)},
 	}
 }
 
 func (l MethodLimiter) Key(c *gin.Context) string {
 	uri := c.Request.RequestURI
 	index := strings.Index(uri, "?")
-	if index != -1 {
+	if index == -1 {
 		return uri
 	}
+
 	return uri[:index]
 }
 
@@ -34,12 +34,7 @@ func (l MethodLimiter) GetBucket(key string) (*ratelimit.Bucket, bool) {
 func (l MethodLimiter) AddBuckets(rules ...LimiterBucketRule) LimiterIface {
 	for _, rule := range rules {
 		if _, ok := l.limiterBuckets[rule.Key]; !ok {
-			bucket := ratelimit.NewBucketWithQuantum(
-				rule.FillInterval,
-				rule.Capacity,
-				rule.Quantum,
-			)
-			l.limiterBuckets[rule.Key] = bucket
+			l.limiterBuckets[rule.Key] = ratelimit.NewBucketWithQuantum(rule.FillInterval, rule.Capacity, rule.Quantum)
 		}
 	}
 

@@ -22,7 +22,7 @@ func NewEmail(info *SMTPInfo) *Email {
 	return &Email{SMTPInfo: info}
 }
 
-func (e *Email) SendEmail(to []string, subject, body string) error {
+func (e *Email) SendMail(to []string, subject, body string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", e.From)
 	m.SetHeader("To", to...)
